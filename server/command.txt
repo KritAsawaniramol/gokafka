@@ -1,0 +1,24 @@
+❯ kafka-topics --bootstrap-server=localhost:9092 --list
+
+❯ kafka-topics --bootstrap-server=localhost:9092 --topic=james --create
+
+❯ kafka-console-consumer --bootstrap-server=localhost:9092 --topic=james
+
+❯ kafka-console-producer --bootstrap-server=localhost:9092 --topic=james 
+
+❯ kafka-console-consumer --bootstrap-server=localhost:9092 --topic=james --group=mycons
+❯ kafka-console-consumer --bootstrap-server=localhost:9092 --topic=james --group=noti
+
+❯ kafka-console-consumer --bootstrap-server=localhost:9092 --include="james|mike"
+
+❯ kafka-console-producer  --bootstrap-server=localhost:9092 --topic=OpenAccountEvent
+❯ kafka-console-producer  --bootstrap-server=localhost:9092 --topic=DepositFundEvent
+❯ kafka-console-producer  --bootstrap-server=localhost:9092 --topic=WithdrawFundEvent
+❯ kafka-console-producer  --bootstrap-server=localhost:9092 --topic=CloseAccountEvent
+
+❯ kafka-console-consumer --bootstrap-server=localhost:9092 --include="CloseAccountEvent|DepositFundEvent|OpenAccountEvent|WithdrawFundEvent" --group=log
+
+❯ curl -H 'content-type:application/json' localhost:8000/openaccount -d '{"AccountHolder":"John Doe","AccountType":1,"OpeningBalance":1000.50}' -i
+❯ curl -H 'content-type:application/json' localhost:8000/depositfund -d '{"id":"3330072e-9375-4e3b-acc1-29ef9a3f71dd","Amount":500}' -i
+❯ curl -H 'content-type:application/json' localhost:8000/withdraw -d '{"id":"3330072e-9375-4e3b-acc1-29ef9a3f71dd","Amount":500}' -i
+❯ curl -H 'content-type:application/json' localhost:8000/closeaccount -d '{"id":"3330072e-9375-4e3b-acc1-29ef9a3f71dd"}' -i

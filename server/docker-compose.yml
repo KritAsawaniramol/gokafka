@@ -1,0 +1,49 @@
+version: '3.9'
+services:
+
+  # broker management
+  zookeeper:
+    image: zookeeper
+    container_name: zookeeper
+    volumes:
+      - ./zookeeper:/data
+  
+  kafka:
+    image: bitnami/kafka
+    container_name: kafka
+    ports:
+      - 9092:9092
+    volumes:
+      - ./kafka:/bitnami/kafka/data
+    environment:
+      # Enables plaintext (non-TLS) listener for Kafka.
+      # The setup is allowing plaintext communication (ALLOW_PLAINTEXT_LISTENER=yes)
+      # , which is fine for local development but not recommended for production. 
+      # For secure communication, consider using SSL listeners and disabling plaintext 
+      # listeners.
+      - ALLOW_PLAINTEXT_LISTENER=yes
+
+      # run on port 9092
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092
+
+      # define host name to call kafka
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+
+      # Zookeeper connection (2182 is port of zookeeper (no need exposes))
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+    depends_on:
+      # kafka can start when there is at least one zookeeper
+      - zookeeper
+
+  mysql:
+    image: mariadb
+    container_name: mysql
+    environment:       
+      - MARIADB_ROOT_PASSWORD=Password
+      - MARIADB_DATABASE=micro
+      - MARIADB_USER=user
+      - MARIADB_PASSWORD=Password
+    ports: 
+      - 3306:3306
+    volumes: 
+      - ./mysql:/var/lib/mysql
